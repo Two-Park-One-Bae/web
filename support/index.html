@@ -5,14 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>지원 · 널스메이트</title>
   <link rel="stylesheet" href="../styles.css">
+  <style>
+    h2 { font-size:1.2rem; margin:36px 0 8px; }
+    section { margin-bottom:8px; }
+    ul { padding-left:20px; }
+    li { margin:4px 0; }
+    .lead { color:var(--muted); }
+    .contact { background:#f6f8fa; border-radius:8px; padding:16px 18px; margin:16px 0; }
+    .contact a { color:var(--accent); font-weight:600; }
+    .faq h3 { font-size:1.02rem; margin:20px 0 4px; }
+    .faq p { margin:0 0 4px; }
+    .note { background:#fff8e6; border-left:3px solid #e0a800; padding:12px 14px; border-radius:6px; margin:12px 0; }
+  </style>
 </head>
 <body>
   <div class="wrap">
     <header><a href="../">← 널스메이트</a></header>
     <h1>지원</h1>
-    <p class="placeholder">문의 채널·FAQ 준비 중입니다. (작성: 박태우)</p>
-    <p>문의: <a href="mailto:twoparkonebae@gmail.com">twoparkonebae@gmail.com</a></p>
-    <p class="updated">최종 수정일: 2026-07-08</p>
+    <p class="lead">널스메이트 사용 중 궁금한 점이나 문제가 있으면 아래로 문의해 주세요.</p>
+
+    <div class="contact">
+      <p>📧 문의: <a href="mailto:twoparkonebae@gmail.com">twoparkonebae@gmail.com</a></p>
+      <p class="lead">영업일 기준 2~3일 이내에 답변드리도록 노력하겠습니다.</p>
+    </div>
+
+    <h2>버그·오류 제보 시 알려주세요</h2>
+    <section>
+      <p>아래 정보를 함께 보내주시면 더 빠르게 확인할 수 있습니다.</p>
+      <ul>
+        <li>기기 모델 (예: iPhone 15, Apple Watch Series 9)</li>
+        <li>iOS / watchOS 버전</li>
+        <li>앱 버전</li>
+        <li>문제가 발생한 화면과 상황(가능하면 재현 방법)</li>
+      </ul>
+    </section>
+
+    <h2>자주 묻는 질문</h2>
+    <section class="faq">
+      <h3>Q. 알약이 정확하게 인식되지 않아요.</h3>
+      <p>밝은 곳에서 어둡고 단색인 배경 위에 알약을 놓고, 각인·색이 잘 보이도록 촬영해 주세요. 여러 알약이 겹치지 않게 펼쳐 놓으면 인식률이 올라갑니다.</p>
+      <p class="note">널스메이트의 식별 결과는 참고용입니다. 투약 전 반드시 처방 내용·약품 라벨을 확인하시고, 필요하면 약사·의사 등 전문가의 판단을 따라 주세요.</p>
+
+      <h3>Q. 촬영한 사진은 어떻게 처리되나요?</h3>
+      <p>알약 식별과 인식 정확도 개선에만 사용되며, 이용자를 식별하는 정보는 수집하지 않습니다. 촬영 시 <strong>환자 이름·병실 등이 적힌 라벨이 함께 찍히지 않도록</strong> 알약만 촬영해 주세요. 자세한 내용은 <a href="../privacy/">개인정보처리방침</a>을 참고하세요.</p>
+
+      <h3>Q. 계정이 필요한가요?</h3>
+      <p>아니요. 널스메이트는 회원가입·로그인 없이 바로 사용할 수 있습니다.</p>
+
+      <h3>Q. 처치 타이머 알림이 울리지 않아요.</h3>
+      <p>기기 설정에서 널스메이트의 <strong>알림·알람 권한</strong>이 켜져 있는지, 집중 모드·저전력 모드·무음 설정이 알림을 막고 있지 않은지 확인해 주세요. 워치에서 울리지 않으면 워치와의 페어링 상태도 확인해 주세요.</p>
+
+      <h3>Q. 내 데이터를 삭제하고 싶어요.</h3>
+      <p>타이머 등 기기에 저장된 데이터는 앱을 삭제하면 함께 삭제됩니다. 그 밖의 문의는 위 이메일로 연락해 주세요.</p>
+    </section>
+
+    <p><a href="../privacy/">개인정보처리방침</a></p>
+    <p class="updated">최종 수정일: 2026-07-20</p>
     <footer>© 2026 투박한 배 (Two Park One Bae)</footer>
   </div>
 </body>
