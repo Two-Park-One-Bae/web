@@ -29,6 +29,8 @@ python3 -m http.server 8000
 
 - [PC 전체 시안](docs/preview/desktop.png)
 - [모바일 전체 시안](docs/preview/mobile.png)
+- [지원 페이지 PC 시안](docs/preview/support-desktop.png)
+- [지원 페이지 모바일 시안](docs/preview/support-mobile.png)
 - 검토 항목: 메인 화면의 폰·워치 배치, 실제 앱 화면의 가독성, 기능 설명, 다운로드 안내.
 
 QR의 목적지는 `https://www.nursemate.app/download/`이므로 해당 경로를 배포한 뒤 실제 QR 연결을 확인한다. Android 출시 시 `download/download.js`의 `STORE_LINKS.android`와 출시 안내 문구를 갱신한다. Google Search Console·네이버 서치어드바이저 소유권 확인 및 사이트맵 제출은 별도 등록 작업이다.
