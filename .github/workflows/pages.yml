@@ -1,0 +1,80 @@
+name: Build and deploy main and develop pages
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.event_name == 'pull_request' && github.event.number || 'deploy' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      pages_source: ${{ steps.pages.outputs.source }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          path: tooling
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          path: production
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'develop' }}
+          path: development
+          persist-credentials: false
+      - name: Assemble released site and development preview
+        run: python3 tooling/scripts/build-pages.py --main production --develop development --output _site
+      - name: Read current Pages publishing source
+        if: github.event_name != 'pull_request'
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          source=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')
+          echo "source=$source" >> "$GITHUB_OUTPUT"
+          if [ "$source" != "workflow" ]; then
+            echo "::notice::Preview artifact is ready. Pages still uses its existing branch source; follow docs/DEPLOYMENT.md to activate Actions publishing."
+          fi
+      - name: Upload reviewable site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: _site
+          include-hidden-files: true
+          retention-days: 14
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request' && steps.pages.outputs.source == 'workflow'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request' && needs.build.outputs.pages_source == 'workflow'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy combined site
+        id: deployment
+        uses: actions/deploy-pages@v4

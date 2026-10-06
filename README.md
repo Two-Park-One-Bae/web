@@ -13,6 +13,8 @@ App Store 심사 필수 URL(개인정보처리방침·지원)을 호스팅하고
 ## 배포
 - GitHub Pages, `main` 브랜치 root 배포
 - 커스텀 도메인: `www.nursemate.app` (CNAME · HTTPS 강제)
+- 개발 페이지 예정 주소: `www.nursemate.app/develop/` (`develop` 브랜치)
+- [운영·개발 배포 설정과 초기 활성화 절차](docs/DEPLOYMENT.md)
 
 ## 개발
 순수 정적 HTML (빌드 없음). `feature/NM-XXX-*` 브랜치에서 작업 → `develop`으로 PR → 검토 후 `main`으로 릴리스 PR. 운영 사이트는 `main` 머지 시 배포된다.
