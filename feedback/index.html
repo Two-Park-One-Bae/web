@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>의견 게시판 · 널스메이트</title>
+  <meta name="description" content="널스메이트를 쓰며 느낀 점과 바라는 기능을 자유롭게 남겨 주세요. 남긴 의견과 운영팀 답변을 함께 볼 수 있어요.">
+  <link rel="canonical" href="https://www.nursemate.app/feedback/">
+  <link rel="icon" href="../assets/app-icon.png">
+  <link rel="stylesheet" href="../landing.css">
+  <style>
+    .feedback-page { background:#fff; }
+    .feedback-container { width:min(760px,calc(100% - 80px)); margin-inline:auto; }
+    .feedback-header .feedback-nav { display:flex; gap:22px; align-items:center; color:var(--muted); font-size:14px; font-weight:600; }
+    .feedback-header .feedback-nav a:hover { color:var(--blue); }
+    .feedback-hero { background:linear-gradient(120deg,#f0f9ff,#edf9f7); padding:64px 0 54px; }
+    .feedback-hero .eyebrow { margin-bottom:14px; color:var(--blue); }
+    .feedback-hero h1 { font-size:44px; line-height:1.3; }
+    .feedback-intro { margin-top:16px; color:#527086; font-size:17px; line-height:1.8; }
+    .composer { margin-top:34px; padding:24px; background:#fff; border:1px solid #dceaf0; border-radius:22px; box-shadow:0 8px 28px #16394a05; }
+    .composer:focus-within { border-color:#9fd3e8; }
+    .composer input[type=text], .composer textarea { width:100%; font:inherit; color:var(--ink); border:0; background:transparent; outline:none; }
+    .composer input[type=text] { font-size:14px; font-weight:700; padding:0 0 12px; border-bottom:1px solid var(--line); }
+    .composer textarea { display:block; margin-top:14px; min-height:110px; resize:vertical; font-size:16px; line-height:1.75; }
+    .composer ::placeholder { color:#9aaab8; font-weight:400; }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+    .composer-hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+    .composer-bottom { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:14px; }
+    .composer-note { color:#7c8c9c; font-size:12px; line-height:1.6; }
+    .composer-actions { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+    .composer-count { color:#9aaab8; font-size:12px; font-variant-numeric:tabular-nums; }
+    .composer-count.over { color:#dc2626; }
+    .composer .button { padding:11px 20px; font-size:14px; border:0; border-radius:12px; cursor:pointer; font-family:inherit; }
+    .composer .button:disabled { background:#a7c9dc; cursor:default; transform:none; }
+    .composer-status { margin-top:12px; font-size:13px; color:var(--teal); }
+    .composer-status.error { color:#dc2626; }
+    .feedback-main { padding-top:52px; padding-bottom:72px; }
+    .feedback-list-head { display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+    .feedback-list-head h2 { font-size:22px; }
+    .feedback-list-head span { color:var(--muted); font-size:14px; }
+    .feedback-list { list-style:none; margin:0; padding:0; }
+    .post { display:grid; grid-template-columns:40px minmax(0,1fr); gap:14px; padding:24px 2px; border-bottom:1px solid var(--line); }
+    .post-avatar { width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:#e5f2f3; color:var(--teal); font-weight:700; font-size:15px; }
+    .post-meta { display:flex; align-items:baseline; gap:10px; }
+    .post-meta strong { font-size:15px; }
+    .post-meta time { color:#9aaab8; font-size:12px; }
+    .post-body { margin-top:4px; color:#3b5266; font-size:15px; line-height:1.8; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .post-reply { margin-top:14px; padding:14px 16px; border-radius:12px; background:#f5fafc; border-left:3px solid #7cc5df; }
+    .post-reply .post-meta strong { color:var(--blue); font-size:14px; display:inline-flex; align-items:center; gap:6px; }
+    .post-reply .post-meta strong img { border-radius:5px; }
+    .post-reply .post-body { font-size:14px; }
+    .feedback-empty { padding:48px 0; text-align:center; color:var(--muted); font-size:15px; }
+    .feedback-more { display:block; margin:28px auto 0; padding:11px 22px; border:1px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); font:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+    .feedback-more:hover { border-color:#9fd3e8; color:var(--blue); }
+    .feedback-footer { border-top:1px solid var(--line); padding:30px 0; }
+    .feedback-footer-inner { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .feedback-footer nav { display:flex; flex-wrap:wrap; gap:22px; font-size:13px; color:#526477; }
+    .feedback-footer a:hover { color:var(--blue); }
+    .feedback-footer p { font-size:12px; color:#7c8c9c; }
+    .composer button:focus-visible, .feedback-more:focus-visible { outline:3px solid var(--blue); outline-offset:4px; }
+    @media(max-width:760px) {
+      .feedback-container { width:calc(100% - 32px); }
+      .feedback-header .feedback-nav { gap:14px; font-size:13px; }
+      .feedback-header .feedback-nav .hide-mobile { display:none; }
+      .feedback-hero { padding:40px 0 34px; }
+      .feedback-hero .eyebrow { font-size:12px; margin-bottom:12px; }
+      .feedback-hero h1 { font-size:30px; }
+      .feedback-intro { font-size:15px; margin-top:12px; }
+      .composer { margin-top:26px; padding:20px; border-radius:18px; }
+      .composer-bottom { flex-direction:column; align-items:stretch; }
+      .composer-actions { justify-content:space-between; }
+      .feedback-main { padding-top:36px; padding-bottom:42px; }
+      .feedback-list-head h2 { font-size:20px; }
+      .post { grid-template-columns:34px minmax(0,1fr); gap:12px; padding:20px 0; }
+      .post-avatar { width:34px; height:34px; font-size:13px; }
+      .post-body { font-size:14px; }
+      .feedback-footer { padding:26px 0; }
+      .feedback-footer-inner { align-items:flex-start; flex-direction:column; gap:17px; }
+      .feedback-footer nav { gap:16px; font-size:12px; }
+    }
+  </style>
+</head>
+<body class="feedback-page">
+  <a class="skip-link" href="#feedback-main">본문으로 이동</a>
+  <header class="site-header feedback-header"><div class="container header-inner">
+    <a class="brand" href="../" aria-label="널스메이트 홈"><img src="../assets/app-icon.png" width="36" height="36" alt=""><span>널스메이트</span></a>
+    <nav class="feedback-nav" aria-label="주 메뉴"><a class="hide-mobile" href="../support/">고객지원</a><a href="../">홈으로 <span aria-hidden="true">↗</span></a></nav>
+  </div></header>
+  <main id="feedback-main">
+    <section class="feedback-hero"><div class="feedback-container">
+      <p class="eyebrow">널스메이트 의견 게시판</p>
+      <h1>널스메이트에 대한 생각을 들려주세요</h1>
+      <p class="feedback-intro">좋았던 점, 불편했던 점, 바라는 기능 무엇이든 괜찮아요.<br>남겨주신 의견은 모두 읽고 다음 업데이트에 반영할게요.</p>
+      <form class="composer" id="composer" novalidate>
+        <label class="composer-hp" aria-hidden="true">웹사이트<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <label for="nickname" class="sr-only">닉네임</label>
+        <input type="text" id="nickname" name="nickname" maxlength="20" placeholder="닉네임 (비워두면 익명)" autocomplete="nickname">
+        <label for="content" class="sr-only">의견</label>
+        <textarea id="content" name="content" maxlength="1000" placeholder="의견을 자유롭게 남겨 주세요." required></textarea>
+        <div class="composer-bottom">
+          <p class="composer-note">남긴 글은 이 페이지에 공개돼요. 환자 정보나 연락처 등 개인정보는 적지 말아 주세요.<br>답장이 필요한 문의는 <a href="mailto:2park1bae@gmail.com" style="text-decoration:underline;text-underline-offset:3px">메일</a>로 보내 주세요.</p>
+          <div class="composer-actions"><span class="composer-count" id="count">0 / 1000</span><button class="button" type="submit" id="submit" disabled>남기기</button></div>
+        </div>
+        <p class="composer-status" id="status" role="status" hidden></p>
+      </form>
+    </div></section>
+    <div class="feedback-container feedback-main">
+      <div class="feedback-list-head"><h2>남겨진 의견</h2><span id="total"></span></div>
+      <ul class="feedback-list" id="list" aria-live="polite"></ul>
+      <p class="feedback-empty" id="empty">의견을 불러오는 중이에요…</p>
+      <button class="feedback-more" id="more" type="button" hidden>더 보기</button>
+    </div>
+  </main>
+  <footer class="feedback-footer"><div class="feedback-container feedback-footer-inner"><nav aria-label="서비스 정보"><a href="../">홈</a><a href="../support/">고객지원</a><a href="../privacy/">개인정보처리방침</a><a href="../terms/">이용약관</a></nav><p>© 2026 투박한 배 (Two Park One Bae)</p></div></footer>
+  <script>
+    // Apps Script 웹 앱 배포 주소 (scripts/feedback/README.md 참고)
+    const API = "https://script.google.com/macros/s/AKfycbwZj5IXc-jjRr3jUzHZl_yVami_sGXFcoTOyECU_tgMXteEkVM_iinlBFwGikMpniyo3g/exec";
+    const MAX = 1000;
+    const PAGE = 20;
+
+    const form = document.getElementById("composer");
+    const nicknameInput = document.getElementById("nickname");
+    const contentInput = document.getElementById("content");
+    const submitButton = document.getElementById("submit");
+    const count = document.getElementById("count");
+    const status = document.getElementById("status");
+    const list = document.getElementById("list");
+    const empty = document.getElementById("empty");
+    const total = document.getElementById("total");
+    const more = document.getElementById("more");
+
+    let posts = [];
+    let shown = 0;
+    let sending = false;
+
+    try { nicknameInput.value = localStorage.getItem("feedback-nickname") || ""; } catch (e) {}
+
+    // 작성 횟수 제한용 브라우저 ID. 저장소를 못 쓰면 이 페이지를 연 동안만 유지된다.
+    let clientId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2)).replace(/[^A-Za-z0-9-]/g, "");
+    try {
+      const saved = localStorage.getItem("feedback-client");
+      if (saved) clientId = saved; else localStorage.setItem("feedback-client", clientId);
+    } catch (e) {}
+
+    function updateComposer() {
+      const length = contentInput.value.trim().length;
+      count.textContent = contentInput.value.length + " / " + MAX;
+      count.classList.toggle("over", contentInput.value.length >= MAX);
+      submitButton.disabled = sending || length === 0;
+    }
+
+    function showStatus(message, isError) {
+      status.textContent = message;
+      status.classList.toggle("error", !!isError);
+      status.hidden = false;
+    }
+
+    function formatDate(iso) {
+      const date = new Date(iso);
+      if (isNaN(date)) return "";
+      const diff = (Date.now() - date) / 1000;
+      if (diff < 60) return "방금 전";
+      if (diff < 3600) return Math.floor(diff / 60) + "분 전";
+      if (diff < 86400) return Math.floor(diff / 3600) + "시간 전";
+      if (diff < 86400 * 7) return Math.floor(diff / 86400) + "일 전";
+      return date.getFullYear() + "." + String(date.getMonth() + 1).padStart(2, "0") + "." + String(date.getDate()).padStart(2, "0");
+    }
+
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function meta(name, iso) {
+      const row = el("div", "post-meta");
+      row.append(name);
+      if (iso) {
+        const time = el("time", "", formatDate(iso));
+        time.dateTime = iso;
+        row.append(time);
+      }
+      return row;
+    }
+
+    function renderPost(post) {
+      const name = post.nickname || "익명";
+      const item = el("li", "post");
+      item.append(el("span", "post-avatar", Array.from(name)[0]));
+      const main = el("div");
+      main.append(meta(el("strong", "", name), post.createdAt), el("p", "post-body", post.content));
+      if (post.reply) {
+        const reply = el("div", "post-reply");
+        const team = el("strong");
+        const icon = el("img");
+        icon.src = "../assets/app-icon.png"; icon.width = 18; icon.height = 18; icon.alt = "";
+        team.append(icon, "널스메이트 팀");
+        reply.append(meta(team, post.repliedAt), el("p", "post-body", post.reply));
+        main.append(reply);
+      }
+      item.append(main);
+      return item;
+    }
+
+    function renderMore() {
+      const next = posts.slice(shown, shown + PAGE);
+      next.forEach(function (post) { list.append(renderPost(post)); });
+      shown += next.length;
+      more.hidden = shown >= posts.length;
+    }
+
+    function render() {
+      list.replaceChildren();
+      shown = 0;
+      total.textContent = posts.length ? posts.length + "개" : "";
+      empty.textContent = "아직 남겨진 의견이 없어요. 첫 의견을 남겨 주세요.";
+      empty.hidden = posts.length > 0;
+      renderMore();
+    }
+
+    async function load() {
+      if (!API) { empty.textContent = "게시판 준비 중이에요."; return; }
+      try {
+        const response = await fetch(API);
+        const data = await response.json();
+        if (!data.ok) throw new Error();
+        posts = data.posts;
+        render();
+      } catch (e) {
+        empty.textContent = "의견을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.";
+      }
+    }
+
+    const RESERVED_NICKNAMES = ["널스메이트", "nursemate", "운영자", "운영팀", "관리자", "admin", "투박한배", "twoparkonebae"];
+    function isReservedNickname(nickname) {
+      const normalized = nickname.replace(/\s+/g, "").toLowerCase();
+      return RESERVED_NICKNAMES.some(function (word) { return normalized.includes(word); });
+    }
+
+    const ERRORS = {
+      reserved_nickname: "운영팀과 헷갈릴 수 있는 닉네임은 쓸 수 없어요. 다른 닉네임을 써 주세요.",
+      too_long: "의견은 " + MAX + "자까지 남길 수 있어요.",
+      too_fast: "의견을 방금 남겼어요. 30초 뒤에 다시 남겨 주세요.",
+      rate_limited: "짧은 시간에 의견을 많이 남겼어요. 1시간 뒤에 다시 남겨 주세요.",
+    };
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const content = contentInput.value.trim();
+      if (!content || sending || !API) return;
+      if (isReservedNickname(nicknameInput.value)) {
+        showStatus(ERRORS.reserved_nickname, true);
+        nicknameInput.focus();
+        return;
+      }
+      sending = true;
+      updateComposer();
+      submitButton.textContent = "보내는 중…";
+      status.hidden = true;
+      try {
+        const nickname = nicknameInput.value.trim();
+        // text/plain으로 보내야 Apps Script가 받지 못하는 사전 요청(CORS preflight)을 피한다.
+        const response = await fetch(API, {
+          method: "POST",
+          // 보내는 중에 페이지를 닫아도 요청은 끝까지 전송된다.
+          keepalive: true,
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ nickname: nickname, content: content, client: clientId, website: form.website.value }),
+        });
+        const data = await response.json();
+        if (!data.ok) throw new Error(data.error);
+        try { localStorage.setItem("feedback-nickname", nickname); } catch (e) {}
+        contentInput.value = "";
+        if (data.pending) {
+          showStatus("고마워요! 확인 후 게시판에 공개할게요.");
+        } else {
+          showStatus("고마워요! 의견이 등록됐어요.");
+          await load();
+        }
+      } catch (e) {
+        showStatus(ERRORS[e.message] || "의견을 보내지 못했어요. 잠시 후 다시 시도해 주세요.", true);
+      } finally {
+        sending = false;
+        submitButton.textContent = "남기기";
+        updateComposer();
+      }
+    });
+
+    contentInput.addEventListener("input", updateComposer);
+    more.addEventListener("click", renderMore);
+    updateComposer();
+    load();
+  </script>
+</body>
+</html>

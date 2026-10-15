@@ -10,7 +10,7 @@ SITE_FILES = (
     "index.html", "404.html", "styles.css", "landing.css", "CNAME",
     ".nojekyll", "robots.txt", "sitemap.xml",
 )
-SITE_DIRECTORIES = ("assets", "terms", "privacy", "support", "download")
+SITE_DIRECTORIES = ("assets", "terms", "privacy", "support", "download", "feedback")
 
 
 def copy_site(source, target):
